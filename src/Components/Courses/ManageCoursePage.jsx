@@ -21,10 +21,22 @@ function ManageCoursesPage({ courses, authors, loadAuthors, loadCourses, ...prop
         alert("Loading authors failed" + error)
       });
     }
-  }, [])
-  return (
-    <CourseForm course={course} errors={errors} authors={authors} />
-  )
+  }, []);
+
+  function handleChange(event) {
+    const { name, value } = event.target;
+    setCourse(prevCourse => ({
+      ...prevCourse,
+      [name]: name === "authorId" ? parseInt(value, 10) : value
+    }))
+  }
+
+  return <CourseForm
+    course={course}
+    errors={errors}
+    authors={authors}
+    onChange={handleChange}
+  />
 }
 
 ManageCoursesPage.propTypes = {
