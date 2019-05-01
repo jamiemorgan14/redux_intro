@@ -1,10 +1,14 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux'
 import * as courseActions from "../../Redux/actions/courseActions";
 import * as authorActions from "../../Redux/actions/authorActions";
 import propTypes from 'prop-types';
+import CourseForm from './CourseForm.jsx';
+import { newCourse } from "../../../tools/mockData"
 
-function ManageCoursesPage({ courses, authors, loadAuthors, loadCourses }) {
+function ManageCoursesPage({ courses, authors, loadAuthors, loadCourses, ...props }) {
+  const [course, setCourse] = useState({ ...props.course });
+  const [errors, setErrors] = useState({});
   useEffect(() => {
     if (courses.length === 0) {
       loadCourses().catch(error => {
@@ -19,13 +23,12 @@ function ManageCoursesPage({ courses, authors, loadAuthors, loadCourses }) {
     }
   }, [])
   return (
-    <>
-      <h2>Manage Course</h2>
-    </>
+    <CourseForm course={course} errors={errors} authors={authors} />
   )
 }
 
 ManageCoursesPage.propTypes = {
+  course: propTypes.object.isRequired,
   authors: propTypes.array.isRequired,
   courses: propTypes.array.isRequired,
   loadCourses: propTypes.func.isRequired,
@@ -34,6 +37,7 @@ ManageCoursesPage.propTypes = {
 
 function mapStateToProps(state) {
   return {
+    course: newCourse,
     courses: state.courses,
     authors: state.authors
   }
